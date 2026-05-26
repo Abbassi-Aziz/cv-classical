@@ -5,6 +5,7 @@ import time
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 img_path = os.path.join(BASE, "../data/butterfly.jpg")
+RESULTS_DIR = os.path.join(BASE, "../results")
 
 img = cv2.imread(img_path)
 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -35,13 +36,13 @@ sharpened_clipped = np.clip(sharpened,0,255).astype(np.uint8)
 cv2.imshow("blurred",blurred_clipped)
 cv2.imshow("sharpened",sharpened_clipped)
 
-os.makedirs("output", exist_ok=True)
-cv2.imwrite("output/blurred.jpg", blurred_clipped)
-cv2.imwrite("output/sharpened.jpg", sharpened_clipped)
-cv2.imwrite("output/original.jpg", gray)
+blurred_path = os.path.join(RESULTS_DIR,"blurred.jpg")
+sharpened_path = os.path.join(RESULTS_DIR,"sharpened.jpg")
+original_path = os.path.join(RESULTS_DIR,"original.jpg")
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+cv2.imwrite(blurred_path, blurred_clipped)
+cv2.imwrite(sharpened_path, sharpened_clipped)
+cv2.imwrite(original_path, gray)
 
 start = time.time()
 blurred_manual = conv_2d(gray, blur)
@@ -54,3 +55,7 @@ cv_time = time.time() - start
 print(f"Manual: {manual_time:.3f}s")
 print(f"OpenCV: {cv_time:.3f}s")
 print(f"Speedup: {manual_time/cv_time:.0f}x")
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
